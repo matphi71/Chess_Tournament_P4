@@ -1,7 +1,7 @@
 '''model'''
 
-import time
-from match import new_score
+'''import time
+from models.match import new_score
 
 
 class turn_set_up:
@@ -39,7 +39,7 @@ class turn_set_up:
         #sort by points number
         new_pairs = []
         new_pairs.append(new_score.last_result_player_1)
-        new_pairs.append(new_score.last_result_player_2)
+        new_pairs.append(new_score.last_result_player_2)'''
         
 
     

@@ -1,6 +1,6 @@
 '''model'''
 
-from round import turn_set_up
+'''from models.round import turn_set_up
 
 class Match:
 
@@ -22,7 +22,7 @@ class Match:
         last_result_player_1 = int(result_player_1 + player_1_new_score)
         last_result_player_2 = int(result_player_2 + player_2_new_score)
         print ("New order player_1:" + str (last_result_player_1))
-        print ("New order player_2:" + str (last_result_player_2))
+        print ("New order player_2:" + str (last_result_player_2))'''
 
 
 

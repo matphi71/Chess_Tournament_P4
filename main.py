@@ -1,16 +1,15 @@
-from models.players import PlayersIdentity
-from models.tournament import Tournament
-from models.match import Match
+#from models.tournament import Tournament
+#from models.match import Match
 
-from view import base
-from models import players
-from controller import base
+from controller import controlleur_players, controlleur_tournament
 
 
 def main():
 
-    run = base.Controller_player()
-    run.go()
+    run_players = controlleur_players.ControllerPlayer()
+    run_players.go()
+    run_tournament = controlleur_tournament.TournamentSetUp()
+    run_tournament.go()
 
 
 if __name__ == "__main__":

@@ -10,7 +10,7 @@ from models import model_tournament
 
 query = Query()
 
-NUMBER_OF_PLAYERS_TO_ADD = 3
+NUMBER_OF_PLAYERS_TO_ADD = 4
 
 
 class ControllerPlayer:
@@ -41,71 +41,39 @@ class ControllerPlayer:
         return
 
     def serialized(self):
-        return self.collecting_players_infos().serialized_players()
-
-    def deserialized(self):
-        print(self.collecting_players_infos().deserialized_players())
+        print(self.collecting_players_infos().serialized_players())
         return
 
+    def deserialized(self):
+        return print(self.collecting_players_infos().deserialized_players())
+
     def sort_players_by_ranking(self):
-        deserialized_players = []
+
+        """ sorting players to make pairs according to the swiss tournament system """
+
+        players_list = []
         for players in model_players.player_db:
-            deserialized_players.append(players)
-        print(deserialized_players)
+            players_list.append(players)
+        sorted_players_list = sorted(players_list, key=lambda k: k['ranking'])
+        return sorted_players_list
 
+    def get_pairs_of_players_first_tour(self):
+        half_players_list = int(len(self.sort_players_by_ranking())/2)
+        print(half_players_list)
+        split_in_half_lower_rankings = self.sort_players_by_ranking()[:half_players_list]
+        split_in_half_higher_rankings = self.sort_players_by_ranking()[half_players_list:]
+        print(list(zip(split_in_half_lower_rankings, split_in_half_higher_rankings)))
 
-    '''def players_sorting(self):
-            players_list = []
-            players_list_elements = players.player_db.all()
-            #players_list_elements.sort()
-            #sorted(players_list_elements[2])
-            #players.db.search ('ranking' == all)#(query.players.player_db('ranking' == any)) #(query.type == 'name'))
-            for row in players_list_elements:
-            #print(row)
-            players_list.append(row)
-        ranking_list = []
-        index = 2
-        for i in range(NUMBER_OF_PLAYERS_TO_ADD):
-            ranking_list.append(players_list[index])
-            index += 3
-        print(ranking_list)
-        return'''
-
-        #self.adjust_points_number()
-        #self.get_first_pairs_of_players()
-        #running = True
-        #while running:
-
-            #self.views.create_new_matchs()
-            #self.get_rest__pairs_of_players()
-            #self.adjust_points_number()
-            #self.views(self.adjust_points_number())
+    def adjust_points(self):
+        pass
 
     def go(self):
         #Controller_player().collecting_players_infos()
         ControllerPlayer().add_players_to_database()
-        ControllerPlayer().sort_players_by_ranking()
-
-
-"new round 4 max"
-'''def generate_a_round(self):
-            players_identity = PlayersIdentity
-            players_view = Players_View
-            players_identity.familly_name = players_view.familly_name
-
-            self.generate_a_round().append(list)
-            return list
-    def players_list(self):
-        self.players_list = []
-        
-        players_dentity = PlayersIdentity
-        enter_identity = PlayersView.enter_identity()
-        players_list.append(familly_name)
-        print(players_list)
-
-
-        #players_list = players_list.append(players_identity())
-        #while len(players_list)<NUMBER_OF_PLAYERS:'''
+        #ControllerPlayer().serialized()
+        #ControllerPlayer().deserialized()
+        #ControllerPlayer().sort_players_by_ranking()
+        ControllerPlayer().get_pairs_of_players_first_tour()
 
 
 

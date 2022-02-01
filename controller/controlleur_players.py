@@ -6,7 +6,7 @@ from tinydb import Query
 from view.view_players import View
 from models import model_players
 from models.model_players import PlayersIdentity
-from models import model_tournament
+
 
 query = Query()
 
@@ -41,11 +41,10 @@ class ControllerPlayer:
         return
 
     def serialized(self):
-        print(self.collecting_players_infos().serialized_players())
-        return
+        return self.collecting_players_infos().serialized_players()
 
     def deserialized(self):
-        return print(self.collecting_players_infos().deserialized_players())
+        return self.collecting_players_infos().deserialized_players()
 
     def sort_players_by_ranking(self):
 
@@ -55,25 +54,21 @@ class ControllerPlayer:
         for players in model_players.player_db:
             players_list.append(players)
         sorted_players_list = sorted(players_list, key=lambda k: k['ranking'])
+        sorted_players_list.reverse()
         return sorted_players_list
 
-    def get_pairs_of_players_first_tour(self):
+    def get_pairs_of_players_first_turn(self):
         half_players_list = int(len(self.sort_players_by_ranking())/2)
-        print(half_players_list)
         split_in_half_lower_rankings = self.sort_players_by_ranking()[:half_players_list]
         split_in_half_higher_rankings = self.sort_players_by_ranking()[half_players_list:]
-        print(list(zip(split_in_half_lower_rankings, split_in_half_higher_rankings)))
-
-    def adjust_points(self):
-        pass
+        pairs_of_players_first_tour = list(zip(split_in_half_lower_rankings, split_in_half_higher_rankings))
+        print(pairs_of_players_first_tour) #list(zip(split_in_half_lower_rankings, split_in_half_higher_rankings)))
+        return pairs_of_players_first_tour
 
     def go(self):
-        #Controller_player().collecting_players_infos()
+
         ControllerPlayer().add_players_to_database()
-        #ControllerPlayer().serialized()
-        #ControllerPlayer().deserialized()
-        #ControllerPlayer().sort_players_by_ranking()
-        ControllerPlayer().get_pairs_of_players_first_tour()
+
 
 
 

@@ -1,19 +1,37 @@
-'''model'''
+""" model round"""
 
-'''import time
-from models.match import new_score
+import time
+import json
+from tinydb import TinyDB, Query
 
+db = TinyDB('db.json')
+User = Query()
+round_db = db.table('ROUND')
 
-class turn_set_up:
+class Round:
 
-    def __init__(self, turn_name): #, beginning_time, ending_time):
-        self.turn_name = turn_name
+    def __init__(self, pairs_to_play=None, beginning_time=None, ending_time=None):
+        self.pairs_to_play = pairs_to_play
+        #self.beginning_time = beginning_time
+        #self.ending_time = ending_time
+
+    def serialized_round(self):
+        serialized_round = {}
+        json.dumps(serialized_round)
+        serialized_round['round_name'] = self.round_name
+        serialized_round['pairs_to_play'] = self.pairs_to_play
+        #serialized_round['beginning_time'] = self.beginning_time
+        #serialized_round['ending_time'] = self.ending_time
+        return serialized_round
+
+    def get_points(self):
+        pass
         #self.beginning_time = beginning_time
         #self.ending_time = ending_time
         
     def time_start(self):
         beginning_time = time.ctime()
-        print (beginning_time)
+        print(beginning_time)
 
     def end_notification(self):
         #demander en vue heure démarage et heure fin
@@ -23,23 +41,10 @@ class turn_set_up:
         ending_time = time.ctime()
         print(ending_time)
 
-    def selecting_first_turn(self):
-        #selecting by order
-        pairs = []
-        list_first_turn = [5, 7, 15, 1, 20, 36, 8, 2]
-        list_first_turn.sort()
-        # génération des premières paires
-        number_of_players = len(list_first_turn)
-        half = number_of_players / 2
-        for i in range(int(number_of_players / 2)):
-            pairs = (list_first_turn[i], list_first_turn[i + (int(number_of_players / 2))])
-            return pairs
+    def add_round_to_database(self):
+        round_db.insert(self.serialized_round())
+        return
 
-    def list_2nd_turn(self):
-        #sort by points number
-        new_pairs = []
-        new_pairs.append(new_score.last_result_player_1)
-        new_pairs.append(new_score.last_result_player_2)'''
         
 
     

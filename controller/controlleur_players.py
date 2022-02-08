@@ -1,12 +1,11 @@
 """ controller players """
 
-
-from tinydb import Query
+from tinydb import Query, where
 
 from view.view_players import View
 from models import model_players
+from models import model_round
 from models.model_players import PlayersIdentity
-
 
 query = Query()
 
@@ -40,15 +39,20 @@ class ControllerPlayer:
             added_players += 1
         return
 
-    def serialized(self):
+    def players_reference(self):
+        for players in enumerate(model_players.player_db):
+            print(self.deserialized_players())
+            # players = model_players.player_db.get(doc_id=int(i))
+
+    def serialized_players(self):
         return self.collecting_players_infos().serialized_players()
 
-    def deserialized(self):
+    def deserialized_players(self):
         return self.collecting_players_infos().deserialized_players()
 
     def sort_players_by_ranking(self):
 
-        """ sorting players to make pairs according to the swiss tournament system """
+        """ sorting players to make pairs for first turn, according to the swiss tournament system """
 
         players_list = []
         for players in model_players.player_db:
@@ -62,12 +66,42 @@ class ControllerPlayer:
         split_in_half_lower_rankings = self.sort_players_by_ranking()[:half_players_list]
         split_in_half_higher_rankings = self.sort_players_by_ranking()[half_players_list:]
         pairs_of_players_first_tour = list(zip(split_in_half_lower_rankings, split_in_half_higher_rankings))
-        print(pairs_of_players_first_tour) #list(zip(split_in_half_lower_rankings, split_in_half_higher_rankings)))
+        print(pairs_of_players_first_tour)
         return pairs_of_players_first_tour
 
-    def go(self):
+    def updating_player_score(self):
+        score_list = []
+        player_list = []
+        for tuples_match in model_round.round_db:
+            for pairs in tuples_match['pairs to play']:
+                for player in pairs:
+                    score_list.append(player[1])
+                    player_list.append(player[0])
+        for i, score in enumerate(score_list):
+            model_players.player_db.update({'score': score}, where('family_name') == player_list[i])
+        return model_players.player_db
 
-        ControllerPlayer().add_players_to_database()
+    def sort_players_by_score(self):
+
+        """ sorting players to make pairs other but first turn, according to the swiss tournament system """
+
+        players_list = []
+        for players in self.updating_player_score():
+            players_list.append(players)
+        sort_by_rank = sorted(players_list, key=lambda k: k['ranking'], reverse=True)
+        sort_by_points = sorted(sort_by_rank, key=lambda k: k['score'], reverse=True)
+        # rank is preserved by default option
+        print(sort_by_points)
+
+    def get_pairs_other_turns(self):
+        pass
+
+    #def go(self):
+        #ControllerPlayer().add_players_to_database()
+        #ControllerPlayer().updating_player_score()
+        #ControllerPlayer().sort_players_by_score()
+
+
 
 
 

@@ -52,12 +52,12 @@ class View:
 
         """ points attribution to player 1 """
 
-        new_result_player_1 = int(input("please enter match result of player n°1: "))
+        new_result_player_1 = int(input("enter result of player n°1: "))
         return new_result_player_1
 
     def new_results_match_inputs_player_2(self):
 
         """ points attribution to player 2 """
 
-        new_result_player_2 = int(input("please enter match result of player n°2: "))
+        new_result_player_2 = int(input("enter result of player n°2: "))
         return new_result_player_2

@@ -29,24 +29,14 @@ class View:
         print("Please enter the following informations to create your new tournament: ")
         tournament_name = input("TOURNAMENT NAME: ")
         place = input("PLACE: ")
-        #date = input("date: ")
-        #turn_numbers = ("T")
+        date = input("DATE: ")
+        time_control = input("Enter time control: bullet, blitz or rapid?\n")
         #rounds = liste instances rondes
         #players = liste des indices correspondant instances joueurs stockées en mémoire
         #time control = input(" chosse one of the following time controlleur: bullet - blitz - fast stroke: ")
-        #description = input("please enter you general comments if needed: ")
-        return {'tournament_name': tournament_name, 'place': place }#, 'date':date, 'turn_numbers':turn_numbers}
-
-    '''def new_match_inputs(self):
-            """Inform of match to play"""
-            for round_number in range(NUMBERS_OF_MATCHS):
-                print(f"ready for Round n° {round_number}?")
-                choice = input("y/n: ")
-                if choice == "n":
-                    return False
-            return True'''
-    def round_inputs(self):
-        pass
+        manager_notes = input("Enter comments if needed:\n")
+        return {'tournament_name': tournament_name, 'place': place, 'date': date, 'time_control': time_control,
+                'manager_notes': manager_notes}
 
     def new_results_match_inputs_player_1(self):
 

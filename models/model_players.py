@@ -23,7 +23,7 @@ class PlayersIdentity:
     def __repr__(self):
         return f"{self.family_name}, {self.name}, {self.ranking}, {self.score}"
 
-    def serialized_players(self):
+    def serialized_player(self):
         serialized_players = {}
         json.dumps(serialized_players)
         serialized_players['family_name'] = self.family_name
@@ -32,11 +32,11 @@ class PlayersIdentity:
         serialized_players['score'] = self.score
         return serialized_players
 
-    def deserialized_players(self):
-        family_name = self.serialized_players()["family_name"]
-        name = self.serialized_players()['name']
-        ranking = self.serialized_players()['ranking']
-        score = self.serialized_players()['score']
+    def deserialized_player(self):
+        family_name = self.serialized_player()["family_name"]
+        name = self.serialized_player()['name']
+        ranking = self.serialized_player()['ranking']
+        score = self.serialized_player()['score']
         deserialized_players = PlayersIdentity(family_name=family_name, name=name, ranking=ranking)
         return deserialized_players
 
@@ -44,6 +44,6 @@ class PlayersIdentity:
 
         """To insert a player into the database"""
 
-        player_db.insert(self.serialized_players())
+        player_db.insert(self.serialized_player())
         return
 

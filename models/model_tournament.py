@@ -10,26 +10,24 @@ tournaments_db = db.table('TOURNAMENT')
 
 class Tournament:
     
-    def __init__(self, tournament_name=None, place=None, date=None, number_of_rounds=0, time_control=None,
-                 player_places=None, players_id=None, round_list=None, manager_notes=None):
+    def __init__(self, tournament_name=None, place=None, date=None, number_of_rounds=0, players_index=None,
+                 rounds_list=None, time_control=None, manager_notes=None):
         self.tournament_name = tournament_name
         self.place = place
         self.date = date
         self. number_of_rounds = number_of_rounds
+        self.players_index = players_index
+        self.rounds_list = rounds_list
         self.time_control = time_control
         self.manager_notes = manager_notes
-        self.index_players = []  # players_reference dans pl controlleur
-        self.players_id = -1
-        self.round_list = []  # deserialised round
-
 
     def __repr__(self):
-        pass
-        #return f"{self.tournament_name}, {self.place}"
+        return f"{self.tournament_name}, {self.place}, {self.date}, {self.number_of_rounds}, {self.players_index}," \
+               f" {self.rounds_list}, {self.time_control}, {self.manager_notes}"
 
     def __str__(self):
-        pass
-        #return f"{self.tournament_name}, {self.place}"
+        return f"{self.tournament_name}, {self.place}, {self.date}, {self.number_of_rounds}, {self.players_index}," \
+               f" {self.rounds_list}, {self.time_control}, {self.manager_notes}"
 
     def serialized_tournament_infos(self):
         serialized_tournament_infos = {}
@@ -40,9 +38,8 @@ class Tournament:
         serialized_tournament_infos['number_of_rounds'] = self.number_of_rounds
         serialized_tournament_infos['time_control'] = self.time_control
         serialized_tournament_infos['manager_notes'] = self.manager_notes
-        serialized_tournament_infos['index_players'] = self.index_players
-        # serialized_tournament_infos['players_id'] = self.players_id
-        serialized_tournament_infos['round_list'] = self.round_list
+        serialized_tournament_infos['players_index'] = self.players_index
+        serialized_tournament_infos['rounds_list'] = self.rounds_list
         return serialized_tournament_infos
 
     def deserialized_tournament_infos(self):
@@ -52,13 +49,12 @@ class Tournament:
         number_of_rounds = self.serialized_tournament_infos()['number_of_rounds']
         time_control = self.serialized_tournament_infos()['time_control']
         manager_notes = self.serialized_tournament_infos()['manager_notes']
-        index_players = self.serialized_tournament_infos()['index_players']
-        # players_id = self.serialized_tournament_infos()['players_id']
-        round_list = self.serialized_tournament_infos()['round_list']
+        players_index = self.serialized_tournament_infos()['players_index']
+        rounds_list = self.serialized_tournament_infos()['rounds_list']
         deserialized_tournament_infos = Tournament(tournament_name=tournament_name, place=place, date=date,
-                                                   number_of_rounds=number_of_rounds, time_control=time_control,
-                                                   manager_notes=manager_notes, player_places=index_players,
-                                                   round_list=round_list)
+                                                   number_of_rounds=number_of_rounds, rounds_list=rounds_list,
+                                                   players_index=players_index, time_control=time_control,
+                                                   manager_notes=manager_notes)
         return deserialized_tournament_infos
 
     def add_tournament_to_database(self):

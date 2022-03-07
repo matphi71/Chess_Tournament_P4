@@ -2,18 +2,16 @@
 
 from tinydb import Query, where
 from tinydb.operations import add
-from collections import deque
 
 from view.view_players import View
 from models import model_players
-from models import model_round
 from models import model_tournament
+from models import model_round
 from models.model_players import PlayersIdentity
-#from controller.controller_tournament import TournamentSetUp
 
 query = Query()
 
-NUMBER_OF_PLAYERS_TO_ADD = 8
+NUMBER_OF_PLAYERS_TO_ADD = 6
 
 
 class ControllerPlayer:
@@ -24,13 +22,15 @@ class ControllerPlayer:
 
     def collecting_players_infos(self):
 
-        """ retrieveing players Identity """
+        """ retrieving players Identity """
 
         inputs = self.view().get_players_inputs()
         family_name = inputs['family_name']
         name = inputs['name']
+        birth_date = inputs['birth_date']
+        gender = inputs['gender']
         ranking = inputs['ranking']
-        return self.model(family_name, name, ranking)
+        return self.model(family_name, name, birth_date, gender, ranking)
 
     def add_players_to_database(self):
 
@@ -43,10 +43,12 @@ class ControllerPlayer:
             added_players += 1
         return
 
-    def players_reference(self):
-        for players in enumerate(model_players.player_db):
-            print(self.deserialized_players())
-            # players = model_players.player_db.get(doc_id=int(i))
+    def players_index(self):
+        players_id_list = []
+        for players_id in model_players.player_db:
+            index = players_id.doc_id, players_id['family_name']
+            players_id_list.append(index)
+        return players_id_list
 
     def serialized_players(self):
         return self.collecting_players_infos().serialized_player()
@@ -58,7 +60,6 @@ class ControllerPlayer:
 
         """ sorting players to make pairs for first turn, according to the swiss tournament system """
 
-        #self.add_players_to_database()
         players_list = []
         for players in model_players.player_db:
             players_list.append(players)
@@ -77,17 +78,17 @@ class ControllerPlayer:
     def updating_player_score(self):
         new_score_list = []
         old_score_list = []
-        player_list = []
+        players_list = []
         players_tuple = []
         rounds_len = []
         for last_score in model_players.player_db:
             old_score_list.append(last_score['score'])
-        for number_of_rounds in model_tournament.tournaments_db:
+        for number_of_rounds in model_round.round_db:
             rounds_len.append(number_of_rounds)
         i = len(rounds_len)
-        tuples_to_search = model_tournament.tournaments_db.get(doc_id=i)
+        tuples_to_search = model_round.round_db.get(doc_id=i)
         try:
-            for tuples_match in tuples_to_search['round_list']['pairs to play']:
+            for tuples_match in tuples_to_search['pairs_to_play']:
                 for tuples in tuples_match:
                     players_tuple.append(tuples)
         except TypeError:
@@ -95,14 +96,9 @@ class ControllerPlayer:
         players_tuple.sort()
         for tuple in players_tuple:
             new_score_list.append(float(tuple[1]))
-            player_list.append(tuple[0])
-        print(player_list)
-        print(old_score_list)
-        print(new_score_list)
+            players_list.append(tuple[0])
         for i, val in enumerate(new_score_list):
-            model_players.player_db.update(add('score', val), where('family_name') == player_list[i])
-        print(model_players.player_db.all())
-        print(len(model_tournament.tournaments_db))
+            model_players.player_db.update(add('score', val), where('family_name') == players_list[i])
         return model_players.player_db
 
     def sort_players_by_score(self):
@@ -123,30 +119,42 @@ class ControllerPlayer:
         new_pairs_list = []
         last_pairs_list = []
         sorted_players = self.sort_players_by_score()
-        if model_tournament.tournaments_db.search(where('round_list').exists()):
-            for tuples_match in model_tournament.tournaments_db:
-                for pair in tuples_match['round_list']['pairs to play']:
-                    last_pairs_list.append(pair)
+        if model_round.round_db:
+            for tuples_match in model_round.round_db:
+                for pairs in tuples_match['pairs_to_play']:
+                    pairs = [pairs[0][0], pairs[1][0]]
+                    pairs = tuple(pairs)
+                    last_pairs_list.append(pairs)
         else:
             return None
         while len(new_pairs_list) <= len(last_pairs_list) and len(sorted_players) > 0:
-            player_1 = sorted_players.pop(0)
-            player_2 = sorted_players.pop(0)
+            player_1 = sorted_players[0]['family_name']
+            player_2 = sorted_players[1]['family_name']
             players_pair = (player_1, player_2)
-            if (player_1['family_name'], player_2['family_name']) in last_pairs_list \
-                    or (player_2['family_name'], player_1['family_name']) in last_pairs_list:
+            players_pair_reversed = players_pair[::-1]
+            if players_pair and players_pair_reversed not in last_pairs_list or players_pair not in last_pairs_list:
+                player_1 = sorted_players.pop(0)
+                player_2 = sorted_players.pop(0)
+                players_pair = (player_1, player_2)
+                new_pairs_list.append(players_pair)
                 if len(sorted_players) == 2:
                     player_1 = sorted_players.pop(0)
                     player_2 = sorted_players.pop()
                     players_pair = (player_1, player_2)
                     new_pairs_list.append(players_pair)
+                    return new_pairs_list
+            else:
+                i = 1
+                while players_pair and players_pair_reversed in last_pairs_list or players_pair in last_pairs_list:
+                    i += 1
+                    player_1 = sorted_players[0]
+                    player_2 = sorted_players[i]
+                    players_pair = (player_1, player_2)
                 else:
                     player_1 = sorted_players.pop(0)
-                    player_2 = sorted_players.pop(1)
+                    player_2 = sorted_players.pop(i)
                     players_pair = (player_1, player_2)
                     new_pairs_list.append(players_pair)
-            else:
-                new_pairs_list.append(players_pair)
         return new_pairs_list
 
 

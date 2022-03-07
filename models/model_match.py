@@ -6,7 +6,6 @@ from tinydb import TinyDB, Query
 
 db = TinyDB('db.json')
 User = Query()
-#match_db = db.table('MATCH')
 
 
 class Match:

@@ -1,7 +1,7 @@
 """ controller Round """
 
 from datetime import datetime
-from tinydb import TinyDB, Query, where
+from tinydb import TinyDB, Query
 
 from models.model_round import Round
 from view.view_players import View
@@ -20,13 +20,13 @@ class ControllerRound:
 
     def round_instantiation_first_turn(self):
 
-        """ match instantiation first turn"""
+        """ match instantiation first turn """
 
         now = datetime.now()
         beginning_time = now.strftime("%m/%d/%Y, %H:%M:%S")
         list_of_pair = []
         i = 1
-        for pair_of_players in ControllerPlayer().get_pairs_of_players_first_turn():  # appropriate_turn_list:
+        for pair_of_players in ControllerPlayer().get_pairs_of_players_first_turn():
             points_award_player_1 = 0
             points_award_player_2 = 0
             player_1 = pair_of_players[0]['family_name']
@@ -51,16 +51,20 @@ class ControllerRound:
             i += 1
         ending_time = now.strftime("%m/%d/%Y, %H:%M:%S")
         return self.round(list_of_pair, beginning_time, ending_time)
+
+    def register_first_round_to_db(self):
+        model_round.round_db.truncate()
+        self.round_instantiation_first_turn().add_round_to_database()
 
     def round_instantiation_other_turns(self):
 
-        """ match instantiation first turn"""
+        """ match instantiation other turns """
 
         now = datetime.now()
         beginning_time = now.strftime("%m/%d/%Y, %H:%M:%S")
         list_of_pair = []
         i = 1
-        for pair_of_players in ControllerPlayer().get_pairs_other_turns():  # appropriate_turn_list:
+        for pair_of_players in ControllerPlayer().get_pairs_other_turns():
             points_award_player_1 = 0
             points_award_player_2 = 0
             player_1 = pair_of_players[0]['family_name']
@@ -86,17 +90,5 @@ class ControllerRound:
         ending_time = now.strftime("%m/%d/%Y, %H:%M:%S")
         return self.round(list_of_pair, beginning_time, ending_time)
 
-    def add_round_to_database(self):
-        #round_number = 0
-        #while round_number != NUMBERS_OF_ROUNDS:
-        self.round_instantiation().add_round_to_database()
-            #round_number += 1
-        return
-
-    def serialized(self):
-        pass
-        #  return print(self.points_attribution_match().serialized_match())
-
-    def deserialized(self):
-        pass
-        # return print(self.points_attribution_match().deserialized_match())
+    def register_other_rounds_to_db(self):
+        self.round_instantiation_other_turns().add_round_to_database()

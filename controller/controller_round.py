@@ -4,7 +4,7 @@ from datetime import datetime
 from tinydb import TinyDB, Query
 
 from models.model_round import Round
-from view.view_players import View
+from view.view_tournament import ViewTournament
 from controller.controller_player import ControllerPlayer
 from models import model_round
 
@@ -16,7 +16,7 @@ class ControllerRound:
 
     def __init__(self):
         self.round = Round
-        self.view = View
+        self.view = ViewTournament
 
     def round_instantiation_first_turn(self):
 
@@ -32,8 +32,10 @@ class ControllerRound:
             player_1 = pair_of_players[0]['family_name']
             player_2 = pair_of_players[1]['family_name']
             print("\nFor match N°" + str(i))
-            input_player_1 = self.view().new_results_match_inputs_player_1()
-            input_player_2 = self.view().new_results_match_inputs_player_2()
+            input_player_1 = int(input(f"enter result of player named {player_1}: "))
+            input_player_2 = int(input(f"enter result of player named {player_2}: "))
+            #input_player_1 = self.view().new_results_match_inputs_player_1()
+            #input_player_2 = self.view().new_results_match_inputs_player_2()
             if input_player_1 > input_player_2:
                 points_award_player_1 += 1
                 points_award_player_2 += 0
@@ -70,8 +72,8 @@ class ControllerRound:
             player_1 = pair_of_players[0]['family_name']
             player_2 = pair_of_players[1]['family_name']
             print("\nFor match N°" + str(i))
-            input_player_1 = self.view().new_results_match_inputs_player_1()
-            input_player_2 = self.view().new_results_match_inputs_player_2()
+            input_player_1 = int(input(f"enter result of player named {player_1}: "))
+            input_player_2 = int(input(f"enter result of player named {player_2}: "))
             if input_player_1 > input_player_2:
                 points_award_player_1 += 1
                 points_award_player_2 += 0

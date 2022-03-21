@@ -11,7 +11,7 @@ from controller.controller_round import ControllerRound
 from controller.controller_player import ControllerPlayer
 
 
-db = TinyDB('db.json')
+db = TinyDB("db.json")
 query = Query()
 
 
@@ -19,30 +19,48 @@ NUMBERS_OF_ROUNDS = 4
 
 
 class TournamentSetUp:
-    
     def __init__(self):
         self.tournament = Tournament
         self.view = ViewTournament
         self.round = Round
 
-    def collecting_tournament_infos(self):
+    def collecting_tournament_info(self):
 
-        """ tournament instantiation """
+        """Tournament instantiation which includes:
+        - Tournament name
+        - Place
+        - Date
+        - number of rounds
+        - Time control
+        - Manager notes
+        - List of rounds
+        - Index of players list"""
 
         inputs = self.view().get_tournament_inputs()
-        tournament_name = inputs['tournament_name']
-        place = inputs['place']
-        date = inputs['date']
+        tournament_name = inputs["tournament_name"]
+        place = inputs["place"]
+        date = inputs["date"]
         number_of_rounds = NUMBERS_OF_ROUNDS
-        time_control = inputs['time_control']
-        manager_notes = inputs['manager_notes']
+        time_control = inputs["time_control"]
+        manager_notes = inputs["manager_notes"]
         rounds_list = self.list_of_rounds()
         players_index = ControllerPlayer().players_index()
-        return self.tournament(tournament_name, place, date, number_of_rounds, players_index, rounds_list,
-                               time_control, manager_notes)
+        return self.tournament(
+            tournament_name,
+            place,
+            date,
+            number_of_rounds,
+            players_index,
+            rounds_list,
+            time_control,
+            manager_notes,
+        )
 
     @staticmethod
     def list_of_rounds():
+
+        """Makes the rounds run, according to the module's controller_tournament variable"""
+
         i = 1
         list_of_rounds = []
         model_round.round_db.truncate()
@@ -59,15 +77,14 @@ class TournamentSetUp:
 
     def add_tournament_to_database(self):
         model_tournament.tournaments_db.truncate()
-        return self.collecting_tournament_infos().add_tournament_to_database()
+        return self.collecting_tournament_info().add_tournament_to_database()
 
     def print_tournament_results(self):
+
+        """To automatically print the results of the ending tournament"""
+
         return self.view().print_tournament_results()
 
     def go(self):
         self.add_tournament_to_database()
         self.print_tournament_results()
-
-
-
-

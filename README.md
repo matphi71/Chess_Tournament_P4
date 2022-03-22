@@ -8,24 +8,30 @@
 ___
 
 ## RUN from scratch
-### Virtual Environment set up:
-### creation
-```python -m venv env```
-### activation
-```source env/bin/activate```
-or for windows:
-```env/Scripts/activate.bat```
-### requirements
-```pip install -r requirements.txt```
 
-### programm's loading:
-git clone
+   - ### Loading:
+   
+   git clone
 
     https://github.com/matphi71/Chess_Tournament_P4.git
 
 [link for git clone](https://github.com/matphi71/Chess_Tournament_P4.git)
 
-# Command line
+   - ### Virtual Environment set up:
+   
+1. #### creation
+```python -m venv env```
+
+2. #### activation
+```source env/bin/activate```
+or for windows:
+```env/Scripts/activate.bat```
+
+3. #### requirements
+```pip install -r requirements.txt```
+
+
+## Command line
       Chess_Tournament_P4.py
 
 ## FEATURES
